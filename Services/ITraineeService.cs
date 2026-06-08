@@ -6,15 +6,15 @@ namespace TraineeManagement.Services;
 
 public interface ITraineeService
 {
-    public List<TraineeResponse> GetAll();
+    public Task<List<TraineeResponse>> GetAll(string? search);
 
-    public TraineeResponse? GetById(int id);
+    public Task<TraineeResponse?> GetById(int id);
 
-    public TraineeResponse Create(TraineeCreateRequest traineeCreateRequest);
+    public Task<TraineeResponse> Create(TraineeCreateRequest traineeCreateRequest);
 
-    public TraineeResponse? Update(int Id, TraineeUpdateRequest traineeUpdateRequest);
+    public Task<TraineeResponse?> Update(int Id, TraineeUpdateRequest traineeUpdateRequest);
 
-    public bool Delete(int Id);
+    public Task<bool> Delete(int Id);
 
 
 }

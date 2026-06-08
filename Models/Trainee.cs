@@ -29,14 +29,7 @@ public class Trainee
         UId = UId + 1;
     }
 
-    public Trainee(TraineeUpdateRequest traineeUpdateRequest)
-    {
-        FirstName = traineeUpdateRequest.FirstName;
-        LastName = traineeUpdateRequest.LastName;
-        Email = traineeUpdateRequest.Email;
-        TechStack = traineeUpdateRequest.TechStack;
-        Status = traineeUpdateRequest.Status;
-        UpdatedDate = DateTime.UtcNow;
-    }
+    public Trainee() {}
+
 
 }
