@@ -1,6 +1,8 @@
 using TraineeManagement.Services;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Models;
+using MySql.EntityFrameworkCore.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +11,13 @@ builder.Services.AddScoped<ITraineeService, TraineeService>();
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<TraineeContext>(opt =>
-    opt.UseInMemoryDatabase("TraineeManagementDb"));
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+?? throw new InvalidOperationException("Connection string not found");
+
+builder.Services.AddDbContext<TraineeContext>(options =>
+    options.UseMySQL(connectionString)
+);
 
 
 

@@ -16,7 +16,7 @@ public class TraineeService : ITraineeService
 
     public async Task<List<TraineeResponse>> GetAll(string? search) 
     {
-        var query = _databaseContext.Trainees.AsQueryable();
+        IQueryable<Trainee> query = _databaseContext.Trainees.AsQueryable();
         if (!string.IsNullOrWhiteSpace(search))
         {
             search = search.ToLower();
@@ -28,7 +28,7 @@ public class TraineeService : ITraineeService
         }
         return await query.Select(t => new TraineeResponse(t)).ToListAsync();
     }
-
+  
     public async Task<TraineeResponse?> GetById(int Id)
     {
         Trainee? trainee = await _databaseContext.Trainees.FindAsync(Id);
@@ -53,7 +53,9 @@ public class TraineeService : ITraineeService
         trainee.Email = traineeUpdateRequest.Email;
         trainee.TechStack = traineeUpdateRequest.TechStack;
         trainee.Status = traineeUpdateRequest.Status;
-        trainee.UpdatedDate = DateTime.UtcNow;
+        DateTime dt = DateTime.Now;
+        DateTime cleanDt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+        trainee.UpdatedDate = cleanDt;
         await _databaseContext.SaveChangesAsync();
         return new TraineeResponse(trainee);
     }
