@@ -1,16 +1,17 @@
 using TraineeManagement.Models;
 using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
+using TraineeManagement.Data;
 
 namespace TraineeManagement.Services;
 
 public class TraineeService : ITraineeService
 {
-    private readonly TraineeContext _databaseContext;
+    private readonly AppDbContext _databaseContext;
 
-    public TraineeService(TraineeContext traineeContext)
+    public TraineeService(AppDbContext appDbContext)
     {
-        _databaseContext = traineeContext;
+        _databaseContext = appDbContext;
     }
     
 

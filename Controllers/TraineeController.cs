@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.Dtos;
 using TraineeManagement.Services;
@@ -16,6 +17,7 @@ public class TraineeController : ControllerBase
         _traineeService = traineeService;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] string? search) 
     {
