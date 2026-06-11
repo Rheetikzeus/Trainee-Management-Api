@@ -4,6 +4,8 @@ using TraineeManagement.Data;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +13,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITraineeService, TraineeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Logging.ClearProviders(); 
+builder.Logging.AddConsole(); 
+
 builder.Services.AddControllers();
 
-builder.Services.AddOpenApi();
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        builder =>
+        {
+            builder.WithOrigins("http://127.0.0.1:5500");
+        });
+});
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
 ?? throw new InvalidOperationException("Connection string not found");
@@ -25,6 +39,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -37,27 +52,47 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-            RoleClaimType = "role" 
         };
     });
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddAuthorization();
+
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    opt.AddSecurityRequirement(document => new OpenApiSecurityRequirement 
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
 
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwaggerUi(options =>
-    {
-        options.DocumentPath = "/openapi/v1.json";
-    });
+    app.UseSwagger(); 
+    app.UseSwaggerUI(); 
 }
+
+
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseRouting();
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

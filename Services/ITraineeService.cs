@@ -6,7 +6,7 @@ namespace TraineeManagement.Services;
 
 public interface ITraineeService
 {
-    public Task<List<TraineeResponse>> GetAll(string? search);
+    public Task<PagedResponse<TraineeResponse>> GetAll(TraineesSearchParameters traineesSearchParameters);
 
     public Task<TraineeResponse?> GetById(int id);
 
