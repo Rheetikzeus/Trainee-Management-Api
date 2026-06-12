@@ -69,7 +69,7 @@ curl -X 'GET' \
 
 ```bash
 curl -X 'GET' \
-  'https://localhost:7249/api/trainee' \
+  'https://localhost:7249/api/trainees' \
   -H 'accept: */*'
 ```
 
@@ -101,13 +101,13 @@ curl -X 'GET' \
 ```
 
 
-### `GET` `/api/trainee/{Id}`
+### `GET` `/api/trainees/{Id}`
 
 #### Sample Request 
 
 ```bash
 curl -X 'GET' \
-  'https://localhost:7249/api/trainee/1' \
+  'https://localhost:7249/api/trainees/1' \
   -H 'accept: */*'
 ```
 
@@ -126,12 +126,12 @@ curl -X 'GET' \
 }
 ```
 
-### `POST` `/api/trainee`
+### `POST` `/api/trainees`
 #### Sample Request 
 
 ```bash
 curl -X 'POST' \
-  'https://localhost:7249/api/trainee' \
+  'https://localhost:7249/api/trainees' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -158,13 +158,13 @@ curl -X 'POST' \
 }
 ```
 
-### `PUT` `/api/trainee/{Id}`
+### `PUT` `/api/trainees/{Id}`
 
 #### Sample Request 
 
 ```bash
 curl -X 'PUT' \
-  'https://localhost:7249/api/trainee/2' \
+  'https://localhost:7249/api/trainees/2' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -191,22 +191,22 @@ curl -X 'PUT' \
 }
 ```
 
-### `DELETE` `/api/trainee/{Id}`
+### `DELETE` `/api/trainees/{Id}`
 
 #### Sample Request 
 
 ```bash
 curl -X 'DELETE' \
-  'https://localhost:7249/api/trainee/2' \
+  'https://localhost:7249/api/trainees/2' \
   -H 'accept: */*'
 ```
 
-### `GET` `/api/trainee?search={query}`
+### `GET` `/api/trainees?search={query}`
 #### Sample Request 
 
 ```bash
 curl -X 'GET' \
-  'https://localhost:7249/api/trainee?search=HTML' \
+  'https://localhost:7249/api/trainees?search=HTML' \
   -H 'accept: */*'
 ```
 

@@ -13,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITraineeService, TraineeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMentorService, MentorService>();
+builder.Services.AddScoped<ILearningTaskService, LearningTaskService>();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails(); 
 
 
 builder.Logging.ClearProviders(); 
@@ -90,6 +94,8 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler(); 
+
 
 app.UseAuthentication();
 app.UseRouting();

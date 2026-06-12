@@ -60,7 +60,7 @@ public class MentorService : IMentorService
         Mentor mentor = new Mentor(mentorCreateRequest);
         await _databaseContext.Mentors.AddAsync(mentor);
         await _databaseContext.SaveChangesAsync();
-        _logger.LogInformation("Successfully Created Trainee: {Id} ", mentor.Id);
+        _logger.LogInformation("Successfully Created Mentor: {Id} ", mentor.Id);
         return new MentorResponse(mentor);
     }
 
@@ -90,12 +90,12 @@ public class MentorService : IMentorService
         Mentor? mentor = await _databaseContext.Mentors.FindAsync(Id);
         if(mentor == null)
         {
-            _logger.LogInformation("Mentor not found with Id: {}", Id);
+            _logger.LogInformation("Mentor not found with Id: {Id}", Id);
             return false;
         }
         _databaseContext.Mentors.Remove(mentor);
         await _databaseContext.SaveChangesAsync();
-        _logger.LogInformation("Successfully Deleted Mentor: {} ", mentor.Id);
+        _logger.LogInformation("Successfully Deleted Mentor: {Id} ", mentor.Id);
         return true;
     }
 }

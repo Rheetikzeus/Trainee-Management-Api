@@ -90,12 +90,12 @@ public class TraineeService : ITraineeService
         Trainee? trainee = await _databaseContext.Trainees.FindAsync(Id);
         if(trainee == null)
         {
-            _logger.LogInformation("Trainee not found with Id: {}", Id);
+            _logger.LogInformation("Trainee not found with Id: {Id}", Id);
             return false;
         }
         _databaseContext.Trainees.Remove(trainee);
         await _databaseContext.SaveChangesAsync();
-        _logger.LogInformation("Successfully Deleted Trainee: {} ", trainee.Id);
+        _logger.LogInformation("Successfully Deleted Trainee: {Id} ", trainee.Id);
         return true;
     }
 }
