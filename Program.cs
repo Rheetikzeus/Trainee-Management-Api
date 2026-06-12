@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ITraineeService, TraineeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMentorService, MentorService>();
+
 
 builder.Logging.ClearProviders(); 
 builder.Logging.AddConsole(); 

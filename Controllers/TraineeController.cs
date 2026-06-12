@@ -8,7 +8,7 @@ namespace TraineeManagement.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("/api/trainee")]
+[Route("/api/trainees")]
 public class TraineeController : ControllerBase
 {
 
@@ -37,7 +37,7 @@ public class TraineeController : ControllerBase
     public async Task<IActionResult> Create(TraineeCreateRequest traineeCreateRequest)
     {
         TraineeResponse traineeResponse = await _traineeService.Create(traineeCreateRequest);
-        return Created("/api/trainee", traineeResponse);
+        return Created("/api/trainees", traineeResponse);
     }
 
     [HttpPut("{Id:int}")]
