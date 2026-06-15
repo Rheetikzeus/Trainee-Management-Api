@@ -2,6 +2,8 @@ using TraineeManagement.Models;
 using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Data;
+using ZstdSharp;
+using TraineeManagement.Exceptions;
 
 namespace TraineeManagement.Services;
 
@@ -43,13 +45,13 @@ public class LearningTaskService : ILearningTaskService
         return new PagedResponse<LearningTaskResponse>(Mentors, totalRecords, learningTasksSearchParameters.PageNumber, learningTasksSearchParameters.PageSize);
     }
   
-    public async Task<LearningTaskResponse?> GetById(int Id)
+    public async Task<LearningTaskResponse> GetById(int Id)
     {
         LearningTask? learningTask = await _databaseContext.LearningTasks.FindAsync(Id);
         if(learningTask == null)
         {
             _logger.LogInformation("Learning Task not found with {Id}", Id);
-            return null;
+            throw new NotFoundException($"Learning Task not found with Id: {Id}.");
         }
         return new LearningTaskResponse(learningTask);
     }
@@ -63,13 +65,13 @@ public class LearningTaskService : ILearningTaskService
         return new LearningTaskResponse(learningTask);
     }
 
-    public async Task<LearningTaskResponse?> Update(int Id, LearningTaskUpdateRequest learningTaskUpdateRequest)
+    public async Task<LearningTaskResponse> Update(int Id, LearningTaskUpdateRequest learningTaskUpdateRequest)
     {
         LearningTask? learningTask = await _databaseContext.LearningTasks.FindAsync(Id);
         if(learningTask == null)
         {
             _logger.LogInformation("learningTask not found with Id: {Id}", Id);
-            return null;
+            throw new NotFoundException($"Learning Task not found with Id: {Id}.");
         }
         learningTask.Title = learningTaskUpdateRequest.Title;
         learningTask.Description = learningTaskUpdateRequest.Description;
@@ -90,7 +92,7 @@ public class LearningTaskService : ILearningTaskService
         if(learningTask == null)
         {
             _logger.LogInformation("learningTask not found with Id: {Id}", Id);
-            return false;
+            throw new NotFoundException($"Learning Task not found with Id: {Id}.");
         }
         _databaseContext.LearningTasks.Remove(learningTask);
         await _databaseContext.SaveChangesAsync();

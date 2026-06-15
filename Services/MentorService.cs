@@ -2,6 +2,7 @@ using TraineeManagement.Models;
 using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Data;
+using TraineeManagement.Exceptions;
 
 namespace TraineeManagement.Services;
 
@@ -44,13 +45,13 @@ public class MentorService : IMentorService
         return new PagedResponse<MentorResponse>(Mentors, totalRecords, mentorsSearchParameters.PageNumber, mentorsSearchParameters.PageSize);
     }
   
-    public async Task<MentorResponse?> GetById(int Id)
+    public async Task<MentorResponse> GetById(int Id)
     {
         Mentor? mentor = await _databaseContext.Mentors.FindAsync(Id);
         if(mentor == null)
         {
             _logger.LogInformation("Mentor not found with {Id}", Id);
-            return null;
+            throw new NotFoundException($"Mentor not found with Id: {Id}");
         }
         return new MentorResponse(mentor);
     }
@@ -64,13 +65,13 @@ public class MentorService : IMentorService
         return new MentorResponse(mentor);
     }
 
-    public async Task<MentorResponse?> Update(int Id, MentorUpdateRequest mentorUpdateRequest)
+    public async Task<MentorResponse> Update(int Id, MentorUpdateRequest mentorUpdateRequest)
     {
         Mentor? mentor = await _databaseContext.Mentors.FindAsync(Id);
         if(mentor == null)
         {
             _logger.LogInformation("mentor not found with Id: {Id}", Id);
-            return null;
+            throw new NotFoundException($"Mentor not found with Id: {Id}");
         }
         mentor.FirstName = mentorUpdateRequest.FirstName;
         mentor.LastName = mentorUpdateRequest.LastName;
@@ -91,7 +92,7 @@ public class MentorService : IMentorService
         if(mentor == null)
         {
             _logger.LogInformation("Mentor not found with Id: {Id}", Id);
-            return false;
+            throw new NotFoundException($"Mentor not found with Id: {Id}");
         }
         _databaseContext.Mentors.Remove(mentor);
         await _databaseContext.SaveChangesAsync();

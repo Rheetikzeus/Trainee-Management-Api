@@ -29,8 +29,8 @@ public class LearningTaskController : ControllerBase
     [HttpGet("{Id:int}")]
     public async Task<IActionResult> GetById(int Id)
     {
-        LearningTaskResponse? learningTaskResponse = await _learningTaskService.GetById(Id);
-        return learningTaskResponse == null ? NotFound() : Ok(learningTaskResponse);
+        LearningTaskResponse learningTaskResponse = await _learningTaskService.GetById(Id);
+        return Ok(learningTaskResponse);
     }
 
     [HttpPost]
@@ -43,15 +43,15 @@ public class LearningTaskController : ControllerBase
     [HttpPut("{Id:int}")]
     public async Task<IActionResult> Update(int Id, LearningTaskUpdateRequest learningTaskUpdateRequest)
     {
-        LearningTaskResponse? learningTaskResponse = await _learningTaskService.Update(Id, learningTaskUpdateRequest);
-        return learningTaskResponse == null ? NotFound() : Ok(learningTaskResponse);
+        LearningTaskResponse learningTaskResponse = await _learningTaskService.Update(Id, learningTaskUpdateRequest);
+        return Ok(learningTaskResponse);
     }
 
     [HttpDelete("{Id:int}")]
     public async Task<IActionResult> Delete(int Id)
-    {
-        bool res = await _learningTaskService.Delete(Id);
-        return res ? NoContent() : NotFound();
+    { 
+        await _learningTaskService.Delete(Id);
+        return NoContent();
     }
 
 }

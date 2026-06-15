@@ -14,6 +14,12 @@ public class AppDbContext : DbContext
     public DbSet<Trainee> Trainees { get; set; } = null!;
     public DbSet<Mentor> Mentors { get; set; } = null!;
     public DbSet<LearningTask> LearningTasks { get; set; } = null!;
+    public DbSet<TaskAssignment> TaskAssignments { get; set; } = null!;
+    public DbSet<Submission> Submissions { get; set; } = null!;
+    public DbSet<Review> Reviews { get; set; } = null!;
+
+
+
 
 
 

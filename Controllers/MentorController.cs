@@ -29,8 +29,8 @@ public class MentorController : ControllerBase
     [HttpGet("{Id:int}")]
     public async Task<IActionResult> GetById(int Id)
     {
-        MentorResponse? mentorResponse = await _mentorService.GetById(Id);
-        return mentorResponse == null ? NotFound() : Ok(mentorResponse);
+        MentorResponse mentorResponse = await _mentorService.GetById(Id);
+        return Ok(mentorResponse);
     }
 
     [HttpPost]
@@ -43,15 +43,15 @@ public class MentorController : ControllerBase
     [HttpPut("{Id:int}")]
     public async Task<IActionResult> Update(int Id, MentorUpdateRequest mentorUpdateRequest)
     {
-        MentorResponse? mentorResponse = await _mentorService.Update(Id, mentorUpdateRequest);
-        return mentorResponse == null ? NotFound() : Ok(mentorResponse);
+        MentorResponse mentorResponse = await _mentorService.Update(Id, mentorUpdateRequest);
+        return Ok(mentorResponse);
     }
 
     [HttpDelete("{Id:int}")]
     public async Task<IActionResult> Delete(int Id)
     {
-        bool res = await _mentorService.Delete(Id);
-        return res ? NoContent() : NotFound();
+        await _mentorService.Delete(Id);
+        return NoContent();
     }
 
 }
