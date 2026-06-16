@@ -92,7 +92,7 @@ public class TraineeService : ITraineeService
         if(trainee == null)
         {
             _logger.LogInformation("Trainee not found with Id: {Id}", Id);
-            return false;
+            throw new NotFoundException($"Trainee not found with Id: {Id}");
         }
         _databaseContext.Trainees.Remove(trainee);
         await _databaseContext.SaveChangesAsync();
