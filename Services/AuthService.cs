@@ -3,6 +3,7 @@ using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using TraineeManagement.Data;
+using TraineeManagement.Exceptions;
 
 
 
@@ -22,22 +23,21 @@ public class AuthService : IAuthService
         _logger = logger;
     }
     
-    public async Task<LoginResponse?> Login(LoginRequest loginRequest)
+    public async Task<LoginResponse> Login(LoginRequest loginRequest)
     {
         User? user = await _databaseContext.Users.FirstOrDefaultAsync(u => u.UserName == loginRequest.UserName);
         if(user == null)
         {
             _logger.LogInformation("User not found with username: {username}", loginRequest.UserName);
-            return null;
+            throw new UnauthorizedException($"Invalid username or password.");
         }
         bool res = PasswordHasherService.VerifyPassword(loginRequest.PassWord, user.PasswordHash);
         if (!res)
         {
             _logger.LogInformation("Invalid username or password: {username}", loginRequest.UserName);
-            return null;
+            throw new UnauthorizedException($"Invalid username or password.");
         }
         string token = _jwtService.GenerateToken(user.Id, user.UserName, user.Role);
-        _logger.LogInformation("User Logged in successfully: {username}", loginRequest.UserName);
         return new LoginResponse
         {
             Token = token,

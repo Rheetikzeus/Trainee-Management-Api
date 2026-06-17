@@ -19,6 +19,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
             BadRequestException => (StatusCodes.Status400BadRequest, "Bad Request"),
+            UnauthorizedException =>(StatusCodes.Status401Unauthorized, "Unauthorized"),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };
 
