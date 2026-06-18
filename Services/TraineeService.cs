@@ -3,6 +3,7 @@ using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Data;
 using TraineeManagement.Exceptions;
+using TraineeManagement.Extensions;
 
 namespace TraineeManagement.Services;
 
@@ -78,9 +79,7 @@ public class TraineeService : ITraineeService
         trainee.Email = traineeUpdateRequest.Email;
         trainee.TechStack = traineeUpdateRequest.TechStack;
         trainee.Status = traineeUpdateRequest.Status;
-        DateTime dt = DateTime.Now;
-        DateTime cleanDt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        trainee.UpdatedDate = cleanDt;
+        trainee.UpdatedDate = DateTime.UtcNow.ToUtcSecondPrecision();
         await _databaseContext.SaveChangesAsync();
         _logger.LogInformation("Successfully Updated Trainee: {Id} ", trainee.Id);
         return new TraineeResponse(trainee);

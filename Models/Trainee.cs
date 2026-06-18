@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using TraineeManagement.Dtos;
+using TraineeManagement.Extensions;
 
 namespace TraineeManagement.Models;
 
@@ -24,10 +25,8 @@ public class Trainee
         Email = traineeCreateRequest.Email;
         TechStack = traineeCreateRequest.TechStack;
         Status = traineeCreateRequest.Status;
-        DateTime dt = DateTime.Now;
-        DateTime cleanDt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        CreatedDate = cleanDt;
-        UpdatedDate = cleanDt;
+        CreatedDate = DateTime.UtcNow.ToUtcSecondPrecision();
+        UpdatedDate = DateTime.UtcNow.ToUtcSecondPrecision();    
     }
 
     public Trainee() {}

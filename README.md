@@ -2,8 +2,8 @@
 ---
 
 ## Technology Used
-- C#
-- .NET
+- C# 14
+- .NET 10
 
 ## How to Run
 
@@ -183,7 +183,7 @@ curl -X 'PUT' \
   "id": 2,
   "firstName": "Jay",
   "lastName": "Sharma",
-  "email": "jayprakash@gmail.com",
+  "email": "jayprakash@gmail.com", 
   "techStack": "CSS",
   "status": "Inactive",
   "createdDate": "2026-06-08T12:50:48.2246143Z",

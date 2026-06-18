@@ -2,7 +2,7 @@ using TraineeManagement.Models;
 using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Data;
-using ZstdSharp;
+using TraineeManagement.Extensions;
 using TraineeManagement.Exceptions;
 
 namespace TraineeManagement.Services;
@@ -78,9 +78,7 @@ public class LearningTaskService : ILearningTaskService
         learningTask.ExpectedTechStack = learningTaskUpdateRequest.ExpectedTechStack;
         learningTask.DueDate = learningTaskUpdateRequest.DueDate;
         learningTask.Status = learningTaskUpdateRequest.Status;
-        DateTime dt = DateTime.Now;
-        DateTime cleanDt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        learningTask.UpdatedDate = cleanDt;
+        learningTask.UpdatedDate = DateTime.UtcNow.ToUtcSecondPrecision();
         await _databaseContext.SaveChangesAsync();
         _logger.LogInformation("Successfully Updated Learning Task: {Id} ", learningTask.Id);
         return new LearningTaskResponse(learningTask);

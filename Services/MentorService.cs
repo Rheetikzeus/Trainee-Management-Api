@@ -3,6 +3,7 @@ using TraineeManagement.Dtos;
 using Microsoft.EntityFrameworkCore;
 using TraineeManagement.Data;
 using TraineeManagement.Exceptions;
+using TraineeManagement.Extensions;
 
 namespace TraineeManagement.Services;
 
@@ -78,9 +79,7 @@ public class MentorService : IMentorService
         mentor.Email = mentorUpdateRequest.Email;
         mentor.Expertise = mentorUpdateRequest.Expertise;
         mentor.Status = mentorUpdateRequest.Status;
-        DateTime dt = DateTime.Now;
-        DateTime cleanDt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        mentor.UpdatedDate = cleanDt;
+        mentor.UpdatedDate = DateTime.UtcNow.ToUtcSecondPrecision();
         await _databaseContext.SaveChangesAsync();
         _logger.LogInformation("Successfully Updated Mentor: {Id} ", mentor.Id);
         return new MentorResponse(mentor);
