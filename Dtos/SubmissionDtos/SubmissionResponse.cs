@@ -6,10 +6,10 @@ public class SubmissionResponse
     public int Id { get; set; }
 
     public int TaskAssignmentId { get; set; }
-    public string SubmissionUrl { get; set; }
-    public string Notes { get; set; } 
+    public string SubmissionUrl { get; set; } = null!;
+    public string Notes { get; set; } = null!; 
     public DateTime SubmittedDate { get; set; }
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
     public SubmissionResponse(Submission submission)
     {
@@ -21,6 +21,6 @@ public class SubmissionResponse
         Status = submission.Status;
     }
 
-    // public MentorResponse(){}
+    public SubmissionResponse(){}
 
 }

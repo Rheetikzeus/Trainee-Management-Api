@@ -46,6 +46,13 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
 ?? throw new InvalidOperationException("Connection string not found");
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "Redis_Cache";
+});
+
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySQL(connectionString)
 );
@@ -69,6 +76,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<RedisCacheService>();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddSwaggerGen(opt =>

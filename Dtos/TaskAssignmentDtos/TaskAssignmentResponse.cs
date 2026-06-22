@@ -12,8 +12,8 @@ public class TaskAssignmentResponse
     public int LearningTaskId { get; set; }
     public DateTime AssignedDate { get; set; }
     public DateTime DueDate { get; set; }
-    public string Status { get; set; }
-    public string Remarks { get; set; } 
+    public string Status { get; set; } = null!;
+    public string Remarks { get; set; } = null!;
 
     public TaskAssignmentResponse(TaskAssignment taskAssignment)
     {
@@ -26,5 +26,7 @@ public class TaskAssignmentResponse
         Status = taskAssignment.Status;
         Remarks = taskAssignment.Remarks;
     }
+
+    public TaskAssignmentResponse() {}
 
 }

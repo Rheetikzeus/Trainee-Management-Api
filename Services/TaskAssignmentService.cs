@@ -10,12 +10,14 @@ public class TaskAssignmentService : ITaskAssignmentService
 {
     private readonly AppDbContext _databaseContext;
     private readonly ILogger<TaskAssignmentService> _logger;
+    private readonly RedisCacheService _cache;
 
 
-    public TaskAssignmentService(AppDbContext appDbContext, ILogger<TaskAssignmentService> logger)
+    public TaskAssignmentService(AppDbContext appDbContext, ILogger<TaskAssignmentService> logger, RedisCacheService cache)
     {
         _logger = logger;
         _databaseContext = appDbContext;
+        _cache = cache;
     }
     
 
@@ -26,13 +28,23 @@ public class TaskAssignmentService : ITaskAssignmentService
   
     public async Task<TaskAssignmentResponse> GetById(int Id)
     {
+        string cacheKey = $"TaskAssignment:{Id}";
+        TaskAssignmentResponse? cachedTaskAssignmentResponse = await _cache.GetKeyAsync<TaskAssignmentResponse>(cacheKey);
+        if(cachedTaskAssignmentResponse != null)
+        {
+            _logger.LogInformation($"TaskAssignment cache hit Id: {Id}");
+            return cachedTaskAssignmentResponse;
+        }
         TaskAssignment? taskAssignment = await _databaseContext.TaskAssignments.FindAsync(Id);
         if(taskAssignment == null)
         {
             _logger.LogInformation("TaskAssignment not found with {Id}", Id);
             throw new NotFoundException($"TaskAssignment not found with Id: {Id}");
         }
-        return new TaskAssignmentResponse(taskAssignment);
+
+        TaskAssignmentResponse taskAssignmentResponse = new TaskAssignmentResponse(taskAssignment);
+        await _cache.SetKeyAsync(cacheKey, taskAssignmentResponse);
+        return taskAssignmentResponse;
     }
 
     public async Task<TaskAssignmentResponse> Create(TaskAssignmentCreateRequest taskAssignmentCreateRequest)
@@ -66,7 +78,14 @@ public class TaskAssignmentService : ITaskAssignmentService
         taskAssignment.Status = taskAssignmentUpdateRequest.Status;
         await _databaseContext.SaveChangesAsync();
         _logger.LogInformation("Successfully Updated TaskAssignment: {Id} ", taskAssignment.Id);
-        return new TaskAssignmentResponse(taskAssignment);
+
+        string cacheKey = $"TaskAssignment:{Id}";
+        TaskAssignmentResponse taskAssignmentResponse = new TaskAssignmentResponse(taskAssignment);
+        if(await _cache.ExistKeyAsync(cacheKey))
+        {
+            await _cache.SetKeyAsync(cacheKey, taskAssignmentResponse);
+        }
+        return taskAssignmentResponse;;
     }
 
 }

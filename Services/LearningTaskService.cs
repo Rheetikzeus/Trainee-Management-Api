@@ -76,7 +76,7 @@ public class LearningTaskService : ILearningTaskService
         learningTask.Title = learningTaskUpdateRequest.Title;
         learningTask.Description = learningTaskUpdateRequest.Description;
         learningTask.ExpectedTechStack = learningTaskUpdateRequest.ExpectedTechStack;
-        learningTask.DueDate = learningTaskUpdateRequest.DueDate;
+        learningTask.DueDate = learningTaskUpdateRequest.DueDate.ToUtcSecondPrecision();
         learningTask.Status = learningTaskUpdateRequest.Status;
         learningTask.UpdatedDate = DateTime.UtcNow.ToUtcSecondPrecision();
         await _databaseContext.SaveChangesAsync();

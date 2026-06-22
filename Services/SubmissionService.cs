@@ -15,13 +15,14 @@ public class SubmissionService : ISubmissionService
     private readonly string[] _allowedFileExtensions = [".pdf", ".xlsx", ".docx", ".txt"];
     private readonly long _allowedFileSize = 10 *1024 * 1024;
 
+    private readonly RedisCacheService _cache;
 
-
-    public SubmissionService(AppDbContext appDbContext, ILogger<SubmissionService> logger, IFileStorageService fileStorageService)
+    public SubmissionService(AppDbContext appDbContext, ILogger<SubmissionService> logger, IFileStorageService fileStorageService, RedisCacheService cache)
     {
         _logger = logger;
         _databaseContext = appDbContext;
         _fileStorageService = fileStorageService;
+        _cache = cache;
     }
     
 
@@ -32,13 +33,23 @@ public class SubmissionService : ISubmissionService
   
     public async Task<SubmissionResponse> GetById(int Id)
     {
+        string cacheKey = $"Submission:{Id}";
+        SubmissionResponse? cachedSubmissionResponse = await _cache.GetKeyAsync<SubmissionResponse>(cacheKey);
+        if(cachedSubmissionResponse != null)
+        {
+            _logger.LogInformation($"Submission cache hit SubmissionId: {Id}");
+            return cachedSubmissionResponse;
+        }
+
         Submission? submission = await _databaseContext.Submissions.FindAsync(Id);
         if(submission == null)
         {
             _logger.LogInformation("Submission not found with {Id}", Id);
             throw new NotFoundException($"Submission not found with Id: {Id}");
         }
-        return new SubmissionResponse(submission);
+        SubmissionResponse submissionResponse = new SubmissionResponse(submission);
+        await _cache.SetKeyAsync(cacheKey, submissionResponse);
+        return submissionResponse;
     }
 
     public async Task<SubmissionResponse> Create(SubmissionCreateRequest submissionCreateRequest)

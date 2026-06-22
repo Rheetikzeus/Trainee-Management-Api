@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TraineeManagement.Dtos;
-using TraineeManagement.Models;
 using TraineeManagement.Services;
+
 
 namespace TraineeManagement.Controllers;
 
