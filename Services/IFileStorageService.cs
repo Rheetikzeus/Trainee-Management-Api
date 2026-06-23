@@ -9,7 +9,7 @@ public interface IFileStorageService
     public Task<bool> ExistsAsync(string filePath);
     public Task DeleteAsync(string filePath);
     public string GenerateUniqueFileName(string originalFileName);
-    public string GetChecksum(string fileName);
+    public string GetChecksum(Stream stream);
 
 
 }

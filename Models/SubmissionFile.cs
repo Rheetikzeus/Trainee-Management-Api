@@ -17,6 +17,6 @@ public class SubmissionFile
     public int UploadedBy { get; set; }
     public DateTime CreatedDate { get; set; }
 
-    
+    public SubmissionFile () {}
 
 }

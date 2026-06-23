@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
+using RabbitMQ.Client;
 
 
 
@@ -20,7 +21,16 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
 
+var rabbitSection = builder.Configuration.GetSection("RabbitMQ");
+var factory = new ConnectionFactory
+{
+    HostName = rabbitSection["HostName"] ?? "locahost",
+    UserName = rabbitSection["UserName"] ?? "guest",
+    Password = rabbitSection["Password"] ?? "guest",
+};
 
+var connection = await factory.CreateConnectionAsync();
+builder.Services.AddSingleton(connection);
 
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -77,6 +87,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<RedisCacheService>();
+builder.Services.AddScoped<RabbitMqService>();
+
 
 builder.Services.AddAuthorization();
 

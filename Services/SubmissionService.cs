@@ -12,17 +12,20 @@ public class SubmissionService : ISubmissionService
     private readonly AppDbContext _databaseContext;
     private readonly ILogger<SubmissionService> _logger;
     private readonly IFileStorageService _fileStorageService;
+    private readonly RabbitMqService _rabbitMqService;
     private readonly string[] _allowedFileExtensions = [".pdf", ".xlsx", ".docx", ".txt"];
     private readonly long _allowedFileSize = 10 *1024 * 1024;
+    private readonly string _queueName= "submission-processing";
 
     private readonly RedisCacheService _cache;
 
-    public SubmissionService(AppDbContext appDbContext, ILogger<SubmissionService> logger, IFileStorageService fileStorageService, RedisCacheService cache)
+    public SubmissionService(AppDbContext appDbContext, ILogger<SubmissionService> logger, IFileStorageService fileStorageService, RedisCacheService cache, RabbitMqService rabbitMqService)
     {
         _logger = logger;
         _databaseContext = appDbContext;
         _fileStorageService = fileStorageService;
         _cache = cache;
+        _rabbitMqService = rabbitMqService;
     }
     
 
@@ -76,11 +79,12 @@ public class SubmissionService : ISubmissionService
         if(file.Length == 0) throw new BadRequestException($"File cannot be empty.");
 
         string generatedFileName = _fileStorageService.GenerateUniqueFileName(file.FileName);
-        await _fileStorageService.SaveAsync(generatedFileName, file.OpenReadStream());
+        Stream stream = file.OpenReadStream();
+        await _fileStorageService.SaveAsync(generatedFileName, stream);
         
         string contentType = file.ContentType;
         string? userName = await _databaseContext.Users.Where(u => u.Id == userId).Select(u => u.UserName).FirstOrDefaultAsync();
-        string CheckSum = _fileStorageService.GetChecksum(generatedFileName);
+        string CheckSum = _fileStorageService.GetChecksum(stream);
 
         SubmissionFile submissionFile = new SubmissionFile
         {
@@ -93,9 +97,20 @@ public class SubmissionService : ISubmissionService
             UploadedBy = userId,
             CreatedDate = DateTime.UtcNow.ToUtcSecondPrecision()
         };
+
         await _databaseContext.SubmissionFiles.AddAsync(submissionFile);
         await _databaseContext.SaveChangesAsync();
 
+        SubmissionFileProcessingRequest submissionFileProcessingRequest = new SubmissionFileProcessingRequest
+        {
+            MessageId = Guid.NewGuid().ToString("N"),
+            CorrelationId = Guid.NewGuid().ToString("N"),
+            SubmissionId = submissionId,
+            FileId = submissionFile.Id,
+            RequestedAt = DateTime.UtcNow.ToUtcSecondPrecision(),
+            ContractVersion = "1.0.0"
+        };
+        await _rabbitMqService.PublishAsync(_queueName, submissionFileProcessingRequest);
         return new SubmissionFileResponse(submissionFile, userName!);
     }
 
