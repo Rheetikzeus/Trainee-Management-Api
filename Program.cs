@@ -19,6 +19,8 @@ builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+builder.Services.AddScoped<IProcessingJobService, ProcessingJobService>();
+
 
 
 var rabbitSection = builder.Configuration.GetSection("RabbitMQ");

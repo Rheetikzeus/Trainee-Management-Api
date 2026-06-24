@@ -34,7 +34,7 @@ public class AuthService : IAuthService
         bool res = PasswordHasherService.VerifyPassword(loginRequest.PassWord, user.PasswordHash);
         if (!res)
         {
-            _logger.LogInformation("Invalid username or password: {username}", loginRequest.UserName);
+            _logger.LogInformation("Invalid password for user: {Id}", user.Id);
             throw new UnauthorizedException($"Invalid username or password.");
         }
         string token = _jwtService.GenerateToken(user.Id, user.UserName, user.Role);

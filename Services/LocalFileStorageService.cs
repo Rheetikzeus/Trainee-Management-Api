@@ -64,6 +64,10 @@ public class LocalFileStorageService : IFileStorageService
 
     public string GetChecksum(Stream stream)
     {
+        if (stream.CanSeek)
+        {
+            stream.Position = 0;
+        }
         using var sha256 = SHA256.Create();
         byte[] hashBytes = sha256.ComputeHash(stream);
         return Convert.ToHexString(hashBytes).ToLowerInvariant();

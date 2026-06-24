@@ -86,6 +86,7 @@ public class SubmissionService : ISubmissionService
         string? userName = await _databaseContext.Users.Where(u => u.Id == userId).Select(u => u.UserName).FirstOrDefaultAsync();
         string CheckSum = _fileStorageService.GetChecksum(stream);
 
+
         SubmissionFile submissionFile = new SubmissionFile
         {
             SubmissionId = submissionId,
@@ -101,27 +102,40 @@ public class SubmissionService : ISubmissionService
         await _databaseContext.SubmissionFiles.AddAsync(submissionFile);
         await _databaseContext.SaveChangesAsync();
 
+        string MessageId = Guid.NewGuid().ToString("N");
+        string CorrelationId = Guid.NewGuid().ToString("N");
+
         SubmissionFileProcessingRequest submissionFileProcessingRequest = new SubmissionFileProcessingRequest
         {
-            MessageId = Guid.NewGuid().ToString("N"),
-            CorrelationId = Guid.NewGuid().ToString("N"),
+            MessageId = MessageId,
+            CorrelationId = CorrelationId,
             SubmissionId = submissionId,
             FileId = submissionFile.Id,
             RequestedAt = DateTime.UtcNow.ToUtcSecondPrecision(),
             ContractVersion = "1.0.0"
         };
+
         await _rabbitMqService.PublishAsync(_queueName, submissionFileProcessingRequest);
+
+        ProcessingJob processingJob = new ProcessingJob
+        {
+            Status = "Queued",
+            CorrelationId = CorrelationId
+        };
+        await _databaseContext.ProcessingJobs.AddAsync(processingJob);
+        
+        await _databaseContext.SaveChangesAsync();
         return new SubmissionFileResponse(submissionFile, userName!);
     }
 
-    public async Task<FileStream> DownloadFile(int submissionFileId)
+    public async Task<FileStream> DownloadFile(int Id)
     {
-        SubmissionFile submissionFile = await _databaseContext.SubmissionFiles.FindAsync(submissionFileId) ?? throw new NotFoundException($"SubmissionFile not found with Id: {submissionFileId}.");
+        SubmissionFile submissionFile = await _databaseContext.SubmissionFiles.FindAsync(Id) ?? throw new NotFoundException($"SubmissionFile not found with Id: {Id}.");
         return await _fileStorageService.OpenReadAsync(submissionFile.GeneratedStorageName);
     }
-    public async Task<bool> DeleteFile(int submissionFileId)
+    public async Task<bool> DeleteFile(int Id)
     {
-        SubmissionFile submissionFile = await _databaseContext.SubmissionFiles.FindAsync(submissionFileId) ?? throw new NotFoundException($"SubmissionFile not found with Id: {submissionFileId}.");
+        SubmissionFile submissionFile = await _databaseContext.SubmissionFiles.FindAsync(Id) ?? throw new NotFoundException($"SubmissionFile not found with Id: {Id}.");
         await _fileStorageService.DeleteAsync(submissionFile.GeneratedStorageName);
         _databaseContext.Remove(submissionFile);
         await _databaseContext.SaveChangesAsync();

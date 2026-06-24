@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<Submission> Submissions { get; set; } = null!;
     public DbSet<Review> Reviews { get; set; } = null!;
     public DbSet<SubmissionFile> SubmissionFiles { get; set; } = null!;
+    public DbSet<ProcessingJob> ProcessingJobs { get; set; } = null!;
 
 
 
