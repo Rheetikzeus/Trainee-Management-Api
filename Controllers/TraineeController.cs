@@ -6,7 +6,7 @@ using TraineeManagement.Services;
 
 namespace TraineeManagement.Controllers;
 
-[Authorize]
+// [Authorize]
 [ApiController]
 [Route("/api/trainees")]
 public class TraineeController : ControllerBase

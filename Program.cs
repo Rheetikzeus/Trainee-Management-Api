@@ -6,6 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using RabbitMQ.Client;
+using HealthChecks.RabbitMQ;
+
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 
 
 
@@ -22,10 +27,21 @@ builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<IProcessingJobService, ProcessingJobService>();
 
 
+builder.Services.AddHealthChecks()
+    .AddRabbitMQ(name: "RabbitMQ")
+    .AddRedis(
+        redisConnectionString: builder.Configuration.GetConnectionString("Redis")!,
+        name: "Redis")
+    .AddMySql(
+        connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!,
+        name: "MySQL");
+
+
 
 var rabbitSection = builder.Configuration.GetSection("RabbitMQ");
 var factory = new ConnectionFactory
 {
+    Port = int.Parse(rabbitSection["Port"] ?? "5672"),
     HostName = rabbitSection["HostName"] ?? "locahost",
     UserName = rabbitSection["UserName"] ?? "guest",
     Password = rabbitSection["Password"] ?? "guest",

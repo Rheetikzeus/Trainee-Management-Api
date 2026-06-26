@@ -1,4 +1,58 @@
 services:
+  # traineemanagement.api:
+  #   image: traineemanagement.api:latest
+  #   build:
+  #     context: .
+  #     dockerfile: TraineeManagement/Dockerfile
+  #   ports:
+  #     - "5001:8081"
+  #   networks:
+  #     - traineemanagement.api
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+      
+  
+  # trainingdirectory.api:
+  #   image: trainingdirectory.api:latest
+  #   build:
+  #     context: .
+  #     dockerfile: TrainingDirectory.Api/Dockerfile
+  #   ports:
+  #     - "5002:8082"
+  #   networks:
+  #     - trainingdirectory.api
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+
+  # submissionprocessor.worker:
+  #   image: submissionprocessor.worker:latest
+  #   build:
+  #     context: .
+  #     dockerfile: SubmissionProcessor.Worker/Dockerfile
+  #   ports:
+  #     - "5003:8083"
+  #   networks:
+  #     - submissionprocessor.worker
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+      
+    
+    
   mysql:
     image: docker-registry-002.zeuslearning.com/zeuslearning/mysql
     container_name: mysql_db
@@ -10,6 +64,13 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_password}
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    # networks:
+    #   - mysql
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -20,6 +81,13 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    # networks:
+    #   - redis
     volumes:
       - redis_data:/data
   
@@ -33,9 +101,16 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     configs:
       - source: rabbitmq-plugins
         target: /etc/rabbitmq/enabled_plugins
+    # networks:
+    #   - rabbitmq
     volumes:
       - rabbitmq_lib:/var/lib/rabbitmq/
       - rabbitmq_log:/var/log/rabbitmq
