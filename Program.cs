@@ -6,10 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi;
 using RabbitMQ.Client;
-using HealthChecks.RabbitMQ;
-
-
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 
 

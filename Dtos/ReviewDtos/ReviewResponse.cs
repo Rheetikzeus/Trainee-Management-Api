@@ -12,9 +12,9 @@ public class ReviewResponse
 
     public int SubmissionId { get; set; }
     public int MentorId { get; set; }
-    public string Feedback { get; set; } 
+    public string Feedback { get; set; } = null!;
     public int Score { get; set; } 
-    public string ReviewStatus { get; set; } 
+    public string ReviewStatus { get; set; } = null!;
     public DateTime ReviewedDate { get; set; }
     public ReviewResponse(Review review)
     {
@@ -26,6 +26,7 @@ public class ReviewResponse
         ReviewedDate = review.ReviewedDate;
     }
 
+    public ReviewResponse () {}
 
 
 }

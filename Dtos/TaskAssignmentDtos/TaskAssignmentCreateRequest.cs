@@ -1,31 +1,32 @@
 using System.ComponentModel.DataAnnotations;
+using TraineeManagement.Api.Constants;
 
 namespace TraineeManagement.Dtos;
 
 
 public class TaskAssignmentCreateRequest
 {
-    [Required(ErrorMessage = "TraineeId is Required.")]
+    [Required]
     public int TraineeId { get; set; }
 
-    [Required(ErrorMessage = "MentorId is Required.")]
+    [Required]
     public int MentorId { get; set; }
 
-    [Required(ErrorMessage = "LearningTaskId is Required.")]
+    [Required]
     public int LearningTaskId { get; set; }
 
-    [Required(ErrorMessage = "AssignedDate is Required.")]
+    [Required]
     public DateTime AssignedDate { get; set; }
 
-    [Required(ErrorMessage = "DueDate is Required.")]
+    [Required]
     public DateTime DueDate { get; set; }
 
-    [Required(ErrorMessage = "Status is Required.")]
-    [AllowedValues(["Assigned", "InProgress", "Submitted", "Reviewed", "Completed"], ErrorMessage = "Invalid status value.")]
-    public string Status { get; set; } = "";
+    [Required]
+    [AllowedValues([StringConstants.STATUS_ASSIGNED, StringConstants.STATUS_IN_PROGRESS, StringConstants.STATUS_SUBMITTED, StringConstants.STATUS_REVIEWED, StringConstants.STATUS_COMPLETED], ErrorMessage = StringConstants.INVALID_STATUS_VALUE)]
+    public string Status { get; set; } = null!;
 
-    [Required(ErrorMessage = "Remarks is Required.")]
-    [StringLength(100, ErrorMessage = "Must be atmost 100 characters.")]
-    public string Remarks { get; set; } = "";
+    [Required]
+    [MaxLength(100)]
+    public string Remarks { get; set; } = null!;
     
 }

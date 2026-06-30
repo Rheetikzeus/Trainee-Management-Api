@@ -1,27 +1,28 @@
 using System.ComponentModel.DataAnnotations;
+using TraineeManagement.Api.Constants;
 
 namespace TraineeManagement.Dtos;
 
 
 public class ReviewCreateRequest
 {
-    [Required(ErrorMessage = "SubmissionId is Required.")]
+    [Required]
     public int SubmissionId { get; set; }
 
-    [Required(ErrorMessage = "MentorId is Required.")]
+    [Required]
     public int MentorId { get; set; }
 
-    [Required(ErrorMessage = "Feedback is Required.")]
-    [StringLength(200, ErrorMessage = "Must be atnost 200 characters.")]
-    public string Feedback { get; set; } = "";
+    [Required]
+    [MaxLength(200)]
+    public string Feedback { get; set; } = null!;
 
     public int Score { get; set; }
 
-    [Required(ErrorMessage = "Status is Required.")]
-    [AllowedValues(["Accepted", "ChangesRequired", "Rejected"], ErrorMessage = "Invalid status value.")]
-    public string ReviewStatus { get; set; } = "";  
+    [Required]
+    [AllowedValues([StringConstants.STATUS_ACCEPTED, StringConstants.STATUS_CHANGES_REQUIRED, StringConstants.STATUS_REJECTED], ErrorMessage = StringConstants.INVALID_STATUS_VALUE)]
+    public string ReviewStatus { get; set; } = null!;  
 
-    [Required(ErrorMessage = "ReviewedDate is Required.")]
+    [Required]
     public DateTime ReviewedDate { get; set; }  
     
 }

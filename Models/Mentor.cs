@@ -10,12 +10,28 @@ public class Mentor
 {
     [Key]
     public int Id { get; set; }
-    public string FirstName { get; set; } = "";
-    public string LastName { get; set; } = "";
-    public string Email { get; set; } = "";
-    public string Expertise { get; set; } ="";
-    public string Status { get; set; } = "";
+    [Required]
+    [MaxLength(50)]
+    public string FirstName { get; set; } = null!;
+
+    [Required]
+    [MaxLength(50)]
+    public string LastName { get; set; } = null!;
+
+    [Required]
+    public string Email { get; set; } = null!;
+
+    [Required]
+    [MaxLength(200)]
+    public string Expertise { get; set; } = null!;
+
+    [Required]
+    public string Status { get; set; } = null!;
+
+    [Required]
     public DateTime CreatedDate { get; set; }
+
+    [Required]
     public DateTime UpdatedDate { get; set; }
 
     public Mentor(MentorCreateRequest mentorCreateRequest)
@@ -30,6 +46,6 @@ public class Mentor
     }
 
 
-public Mentor() {}
+    public Mentor() {}
 
 }

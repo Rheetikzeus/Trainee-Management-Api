@@ -8,11 +8,20 @@ public class ProcessingJob
 {
     [Key]
     public int Id { get; set; }
+    
+    [Required]
     public string Status { get; set; } = null!;
+    
+    [Required]
     public int Attempts { get; set; }
+    
     public string ErrorSummary { get; set; } = string.Empty;
+    
+    [Required]
     public string CorrelationId { get; set; } = null!;
+    
     public DateTime StartedTime { get; set; }
+    
     public DateTime CompletedTime { get; set; }
     
     

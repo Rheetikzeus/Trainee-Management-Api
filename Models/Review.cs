@@ -9,12 +9,23 @@ public class Review
 {
     [Key]
     public int Id { get; set; }
-
+    
+    [Required]
     public int SubmissionId { get; set; }
+    
+    [Required]
     public int MentorId { get; set; }
-    public string Feedback { get; set; } = "";
+    
+    [Required]
+    [MaxLength(200)]
+    public string Feedback { get; set; } = null!;
+    
     public int Score { get; set; } 
-    public string ReviewStatus { get; set; } = "";
+    
+    [Required]
+    public string ReviewStatus { get; set; } = null!;
+    
+    [Required]
     public DateTime ReviewedDate { get; set; }
     public Review(ReviewCreateRequest reviewCreateRequest)
     {
@@ -26,6 +37,6 @@ public class Review
     }
 
 
-public Review() {}
+    public Review() {}
 
 }

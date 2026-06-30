@@ -9,7 +9,7 @@ public class ProcessingJobResponse
     public int Id { get; set; }
     public string Status { get; set; } = null!;
     public int Attempts { get; set; }
-    public string ErrorSummary { get; set; } = string.Empty;
+    public string ErrorSummary { get; set; } = null!;
     public string CorrelationId { get; set; } = null!;
     public DateTime StartedTime { get; set; }
     public DateTime CompletedTime { get; set; }
@@ -24,5 +24,7 @@ public class ProcessingJobResponse
         StartedTime = processingJob.StartedTime;
         CompletedTime = processingJob.CompletedTime;
     }
+
+    public ProcessingJobResponse() {}
 
 }

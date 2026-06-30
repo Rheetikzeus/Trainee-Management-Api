@@ -10,11 +10,23 @@ public class Submission
     [Key]
     public int Id { get; set; }
 
+    [Required]
     public int TaskAssignmentId { get; set; }
-    public string SubmissionUrl { get; set; } = "";
-    public string Notes { get; set; } = "";
+
+    [Required]
+    [MaxLength(200)]
+    public string SubmissionUrl { get; set; } = null!;
+
+    [Required]
+    [MaxLength(500)]
+    public string Notes { get; set; } = null!;
+
+    [Required]
     public DateTime SubmittedDate { get; set; }
-    public string Status { get; set; } = "";
+
+    [Required]
+    public string Status { get; set; } = null!; 
+
     public Submission(SubmissionCreateRequest submissionCreateRequest)
     {
         TaskAssignmentId = submissionCreateRequest.TaskAssignmentId;
@@ -25,6 +37,6 @@ public class Submission
     }
 
 
-public Submission() {}
+    public Submission() {}
 
 }

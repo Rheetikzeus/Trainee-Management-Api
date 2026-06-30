@@ -4,11 +4,11 @@ namespace TraineeManagement.Dtos;
 public class LearningTaskResponse
 {
     public int Id { get; set; }
-    public string? Title { get; set; }
-    public string? Description { get; set; }
-    public string? ExpectedTechStack { get; set; }
+    public string Title { get; set; } = null!;
+    public string Description { get; set; } = null!;
+    public string ExpectedTechStack { get; set; } = null!;
     public DateTime DueDate { get; set; }
-    public string? Status { get; set; }
+    public string Status { get; set; } = null!;
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
 
@@ -24,6 +24,6 @@ public class LearningTaskResponse
         UpdatedDate = learningTask.UpdatedDate;
     }
 
-    // public LearningTaskResponse(){}
+    public LearningTaskResponse(){}
 
 }

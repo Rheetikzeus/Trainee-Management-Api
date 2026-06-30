@@ -1,6 +1,6 @@
 
 using System.ComponentModel.DataAnnotations;
-
+using TraineeManagement.Api.Constants;
 using TraineeManagement.Dtos;
 
 namespace TraineeManagement.Models;
@@ -10,13 +10,27 @@ public class TaskAssignment
     [Key]
     public int Id { get; set; }
 
+    [Required]
     public int TraineeId { get; set; }
+
+    [Required]
     public int MentorId { get; set; }
+
+    [Required]
     public int LearningTaskId { get; set; }
+
+    [Required]
     public DateTime AssignedDate { get; set; }
+
+    [Required]
     public DateTime DueDate { get; set; }
-    public string Status { get; set; } = "";
-    public string Remarks { get; set; } = "";
+
+    [Required]
+    public string Status { get; set; } = null!;
+
+    [Required]
+    [MaxLength(100)]
+    public string Remarks { get; set; } = null!;
 
     public TaskAssignment(TaskAssignmentCreateRequest taskAssignmentCreateRequest)
     {
@@ -30,6 +44,6 @@ public class TaskAssignment
     }
 
 
-public TaskAssignment() {}
+    public TaskAssignment() {}
 
 }

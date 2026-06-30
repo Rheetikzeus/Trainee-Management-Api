@@ -10,12 +10,29 @@ public class LearningTask
 {
     [Key]
     public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public string Description { get; set; } = "";
-    public string ExpectedTechStack { get; set; } = "";
+
+    [Required]
+    [MaxLength(50)]
+    public string Title { get; set; } = null!;
+
+    [Required]
+    [MaxLength(200)]
+    public string Description { get; set; } = null!;
+
+    [Required]
+    [MaxLength(200)]
+    public string ExpectedTechStack { get; set; } = null!;
+
+    [Required]
     public DateTime DueDate { get; set; }
-    public string Status { get; set; } = "";
+
+    [Required]
+    public string Status { get; set; } = null!;
+    
+    [Required]
     public DateTime CreatedDate { get; set; }
+
+    [Required]
     public DateTime UpdatedDate { get; set; }
 
     public LearningTask(LearningTaskCreateRequest learningTaskCreateRequest)
@@ -30,6 +47,6 @@ public class LearningTask
     }
 
 
-public LearningTask() {}
+    public LearningTask() {}
 
 }

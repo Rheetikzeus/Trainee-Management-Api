@@ -6,7 +6,7 @@ namespace TraineeManagement.Dtos;
 
 public class SubmissionFileCreateRequest
 {
-    [Required(ErrorMessage = "File is required.")]
+    [Required]
     public IFormFile File { get; set; } = null!;
 
 }

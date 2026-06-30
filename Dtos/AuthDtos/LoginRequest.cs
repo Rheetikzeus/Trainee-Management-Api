@@ -6,10 +6,10 @@ namespace TraineeManagement.Dtos;
 
 public class LoginRequest
 {
-    [Required(ErrorMessage = "username is required.")]
-    public string UserName { get; set; } = "";
+    [Required]
+    public string UserName { get; set; } = null!;
 
-    [Required(ErrorMessage = "password is required.")]
-    public string PassWord { get; set; } = "";
+    [Required]
+    public string PassWord { get; set; } = null!;
     
 }

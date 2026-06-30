@@ -1,26 +1,28 @@
 using System.ComponentModel.DataAnnotations;
-
+using TraineeManagement.Api.Constants;
 
 namespace TraineeManagement.Dtos;
 
+
 public class TraineeUpdateRequest
 {
-    [Required(ErrorMessage = "First Name is required.")]
-    [StringLength(50, ErrorMessage = "Must be atmost 50 characters.")]
-    public string FirstName { get; set; } = "";
+    [Required]
+    [MaxLength(50)]
+    public string FirstName { get; set; } = null!;
 
-    [Required(ErrorMessage = "Last Name is required.")]
-    [StringLength(50, ErrorMessage = "Must be atmost 50 characters.")]
-    public string LastName { get; set; } = "";
+    [Required]
+    [MaxLength(50)]
+    public string LastName { get; set; } = null!;
 
-    [Required(ErrorMessage = "Email is Required.")]
-    [EmailAddress(ErrorMessage = "Invalid email format.")]
-    public string Email { get; set; } = "";
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = null!;
 
-    [Required(ErrorMessage = "Techstack is required.")]
-    public string TechStack { get; set; } = "";
+    [Required]
+    public string TechStack { get; set; } = null!;
 
-    [Required(ErrorMessage = "Status is required.")]
-    [AllowedValues(["Active", "Inactive", "Completed"], ErrorMessage = "Invalid status value.")]
-    public string Status { get; set; } = "";
+    [Required]
+    [AllowedValues([StringConstants.STATUS_ACTIVE, StringConstants.STATUS_INACTIVE, StringConstants.STATUS_COMPLETED], ErrorMessage = StringConstants.INVALID_STATUS_VALUE)]
+    public string Status { get; set; } = null!;
+    
 }

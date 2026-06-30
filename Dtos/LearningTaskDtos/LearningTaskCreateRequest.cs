@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using TraineeManagement.Api.Constants;
 using TraineeManagement.Models;
 
 namespace TraineeManagement.Dtos;
@@ -6,22 +7,23 @@ namespace TraineeManagement.Dtos;
 
 public class LearningTaskCreateRequest
 {
-    [Required(ErrorMessage = "Title is required.")]
-    [StringLength(50, ErrorMessage = "Must be atmost 50 characters.")]
-    public string Title { get; set; } = "";
+    [Required]
+    [MaxLength(50)]
+    public string Title { get; set; } = null!;
 
-    [Required(ErrorMessage = "Description is required.")]
-    [StringLength(200, ErrorMessage = "Must be atmost 200 characters.")]
-    public string Description { get; set; } = "";
+    [Required]
+    [MaxLength(200)]
+    public string Description { get; set; } = null!;
 
-    [Required(ErrorMessage = "Expected Tech Stack is Required.")]
-    public string ExpectedTechStack { get; set; } = "";
+    [Required]
+    [MaxLength(200)]
+    public string ExpectedTechStack { get; set; } = null!;
 
-    [Required(ErrorMessage = "Due Date is required.")]
+    [Required]
     public DateTime DueDate { get; set; }
 
-    [Required(ErrorMessage = "Status is required.")]
-    [AllowedValues(["Draft", "Published", "Closed"], ErrorMessage = "Invalid status value.")]
-    public string Status { get; set; } = "";
+    [Required]
+    [AllowedValues([StringConstants.STATUS_DRAFT, StringConstants.STATUS_PUBLISHED, StringConstants.STATUS_CLOSED], ErrorMessage = StringConstants.INVALID_STATUS_VALUE)]
+    public string Status { get; set; } = null!;
     
 }
